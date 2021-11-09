@@ -3,11 +3,9 @@ project(App)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include(${CMAKE_SOURCE_DIR}/Libs/Fetch.cmake)
+include(C:/CMakeProjects/Fetch.cmake)
 
-set(APP_INCL_DEPS ${CMAKE_SOURCE_DIR})
-
-MakeAvailable(Property PROPERTY include github.com/nilrum/Property2 APP_INCL_DEPS)
+MakeAvailable(Property github.com/nilrum/Property2 .)
 
 set(BASE_HDR
         App.h
