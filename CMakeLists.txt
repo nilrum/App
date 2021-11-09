@@ -3,23 +3,11 @@ project(App)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if(NOT DEFINED FETCH_DIR)
-    set(FETCH_DIR ${CMAKE_SOURCE_DIR}/Libs)
-endif()
+include(${CMAKE_SOURCE_DIR}/Libs/Fetch.cmake)
 
-set(BUILD_TEST ON)
+set(APP_INCL_DEPS ${CMAKE_SOURCE_DIR})
 
-set(PROPERTY_DIR ${FETCH_DIR}/Property)
-
-include(FetchContent)
-FetchContent_Declare(
-        Property
-        GIT_REPOSITORY https://github.com/nilrum/Property2.git
-        SOURCE_DIR ${PROPERTY_DIR}
-)
-
-FetchContent_Populate(Property)
-add_subdirectory(${PROPERTY_DIR})
+MakeAvailable(Property PROPERTY include github.com/nilrum/Property2 APP_INCL_DEPS)
 
 set(BASE_HDR
         App.h
@@ -38,13 +26,13 @@ set(BASE_CPP
 
 try_compile(HAS_STD_FS
         "${CMAKE_BINARY_DIR}/temp"
-        "${CMAKE_SOURCE_DIR}/FileSystem/TestStdFileSystem.cpp"
+        "${LIB_DIR}/FileSystem/TestStdFileSystem.cpp"
         CMAKE_FLAGS -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
         )
 
 try_compile(HAS_STD_EXPER_FS
         "${CMAKE_BINARY_DIR}/temp"
-        "${CMAKE_SOURCE_DIR}/FileSystem/TestExperFileSystem.cpp"
+        "${LIB_DIR}/FileSystem/TestExperFileSystem.cpp"
         CMAKE_FLAGS -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
         LINK_LIBRARIES stdc++fs)
 
