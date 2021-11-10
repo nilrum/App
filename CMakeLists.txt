@@ -37,6 +37,7 @@ try_compile(HAS_STD_EXPER_FS
 if(HAS_STD_FS)
     message("Using std::filesystem")
     add_definitions("-DFILESYSTEM_STD")
+    set(PROPERTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Property CACHE FILEPATH "PROPERTY_DIR")
 elseif(HAS_STD_EXPER_FS)
     message("Using std::experimental::filesystem")
     add_definitions("-DFILESYSTEM_EXPER")

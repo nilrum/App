@@ -5,8 +5,6 @@
 #ifndef ATLAS_OWNFILESYSTEM_H
 #define ATLAS_OWNFILESYSTEM_H
 
-#ifdef FILESYSTEM_OWN
-
 #include <string>
 
 namespace fs{
@@ -39,6 +37,5 @@ namespace fs{
     bool create_directory( const path& value);
     bool create_directories( const path& value);
 }
-#endif
 
 #endif //ATLAS_OWNFILESYSTEM_H
