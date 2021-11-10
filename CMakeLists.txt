@@ -43,21 +43,23 @@ elseif(HAS_STD_EXPER_FS)
 else()
     message("Using own filesystem")
     add_definitions("-DFILESYSTEM_OWN")
-    set(BASE_CPP ${BASE_CPP} FileSystem/OwnFileSystem.cpp)
+    set(BASE_CPP ${BASE_CPP} ${LIB_DIR}/FileSystem/OwnFileSystem.cpp)
 
 endif()
 
+add_library(App STATIC ${BASE_CPP})
 
 if(${BUILD_TEST})
     add_executable(AppTest
             tests/AppTest.cpp
-            ${BASE_CPP}
             )
     target_include_directories(AppTest
             PUBLIC ${FETCH_DIR}
             )
-    target_link_libraries(AppTest PUBLIC Property gtest gtest_main gmock)
+    target_link_libraries(AppTest PUBLIC App gtest gtest_main gmock)
     enable_testing()
     add_test(NAME AppTest COMMAND AppTest)
 endif()
 
+#Включаем зависимости для корневого проекта
+DepsAvailable()
