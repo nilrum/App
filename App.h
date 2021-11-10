@@ -31,14 +31,17 @@ enum class TAppResult {
     NoCustom
 };
 
+class TWidget;
+CLASS_PTRS(Widget)
+
 class TApp : public TAppItem{
 public:
     TApp(const TString& nameApp, const TString& titleApp = TString());
     ~TApp();
 
-
     const TString& SecondTitle() const;//дополнительный текст для вывода рядом с меткой
     virtual void SetSecondTitle(const TString& value);
+
     /* Загружает настройки приложения
      * Если есть настройки в каталоге CustomDir то грузим из него
      * Если нет то грузим из файла по умолчанию <name>.xml
@@ -104,6 +107,11 @@ public:
     //Запускает таймер для функции
     virtual TPtrTimer CreateTimer(const TTimer::TInterval& interval, const TTimerFunction& fun);
 
+    //Создает виджет по типу
+    virtual TPtrWidget CreateWidget(const TString& type);
+    using TMapAliasWidgets = std::map<TString, TString>;
+    STATIC(TMapAliasWidgets, MapAliasWidgets)
+
     //Добавляет информацию в лог приложения
     void Log(const TString& value){};
 
@@ -144,6 +152,41 @@ protected:
 
     void BeforeRun();
     void AfterRun();
+};
+
+#define ADD_MAP_ALIAS(TYPE, ALIAS) \
+    INIT_SECTION(TYPE, TApp::MapAliasWidgets()[#TYPE] = #ALIAS; )
+
+enum class TAnswerFlag{ Before, Run, After};
+
+class TWidget : public TAppItem{
+public:
+    TWidget(){ name = "Widget"; }
+
+    virtual void SetIsVisible(bool value) { isVisible = value; };
+    virtual bool IsVisible() const { return isVisible; };
+
+    virtual TPtrPropertyClass CreateCustoms() const                                 { return TPtrPropertyClass(); };
+    virtual TResult LoadFromCustoms(const TPtrPropertyClass &value, bool isDefault) { return TResult(); };
+    virtual TResult SaveToCustoms(const TPtrPropertyClass &value, bool isDefault)   { return TResult(); };
+
+    virtual void SetWidgetObject(const TPtrPropertyClass& value){};
+
+    TMenuItem& Popup() { return popup; }                            //поп меню виджета
+    TOnNotify OnCheckPopup;                                         //сигнал перед отображением поп меню
+
+    bool IsClosable() const { return isClosable; }
+    virtual void SetIsClosable(bool value) { isClosable = value; }
+    TOnNotify OnClose;
+
+    virtual void RequestWidget(const TPtrWidget& value, bool isAdd){};//привязать к текущему виджету виджет для отправки сообщений
+    virtual void Answer(double value, TAnswerFlag flag){}//передать текущему виджету сообщение
+
+    PROPERTIES(TWidget, TAppItem,)
+protected:
+    bool isVisible = true;
+    bool isClosable = true; //флаг о том можно ли удалить виджет закрытием
+    TMenuItem popup;
 };
 
 #endif //BASEAPP_APP_H

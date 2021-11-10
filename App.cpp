@@ -207,4 +207,14 @@ void TApp::About()
 #endif
 }
 
+TPtrWidget TApp::CreateWidget(const TString &type)
+{
+     auto& m = MapAliasWidgets();
+    auto it = m.find(type);
+    if(it != m.end())
+        return ::CreateFromType<TPtrWidget>(it->second);
+    else
+        return ::CreateFromType<TPtrWidget>(type);
+}
+
 
