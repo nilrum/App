@@ -217,4 +217,67 @@ TPtrWidget TApp::CreateWidget(const TString &type)
         return ::CreateFromType<TPtrWidget>(type);
 }
 
+bool TApp::ShowError(const TResult &value)
+{
+    if(value.IsNoError())
+        return false;
+    if(value.IsCancel() == false)
+        ShowMessage(TRANS(TResult::TextError(value)));
+    return true;
+}
 
+
+//----------------------------------------------------------------------------------------------------------------------
+TResult TThreadProgress::Run()
+{
+    auto res = InitFunction();
+    if(APP->ShowError(res)) return res;
+
+    prog = APP->GetProgress();                                              //создаем прогресс
+    prog->OnResult.connect(&TThreadProgress::ResultFunction, this);     //указываем функцию результата
+    if(NoThread() == false)
+    {
+        std::thread t(&TThreadProgress::ThreadFuncImpl, this);
+        t.detach();
+    }
+    else
+        NoThreadFuncImpl();
+    return TResult();
+}
+
+void TThreadProgress::Reset()
+{
+    prog.reset();
+}
+
+void TThreadProgress::ThreadFuncImpl()
+{
+    StartThread();
+    NoThreadFuncImpl();
+    FinishThread();
+}
+
+void TThreadProgress::NoThreadFuncImpl()
+{
+    auto res = ThreadFunction();
+    if(prog->IsCancel() == false)
+        prog->SetResult(res);
+    else
+        Reset();
+}
+
+TResult TThreadProgress::InitFunction()
+{
+    return TResult();
+}
+
+TResult TThreadProgress::ThreadFunction()
+{
+    return TResult();
+}
+
+void TThreadProgress::ResultFunction(TResult res)
+{
+    APP->ShowError(res);
+    Reset();
+}

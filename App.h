@@ -11,6 +11,7 @@
 #include "Timer.h"
 #include "MenuTree.h"
 #include "Progress.h"
+#include <condition_variable>
 
 class TAppItem : public TPropertyClass{
 public:
@@ -118,6 +119,9 @@ public:
     //Сообщение о приложении
     void About();
 
+    //Отобразить ошибки
+    virtual bool ShowError(const TResult& value);
+
     PROPERTIES_CREATE(TApp, TAppItem, NO_CREATE(),
       //PROPERTY(TString, customDir, CustomDir, SetCustomDir);
       PROPERTY(TString, lastSaveDir, LastSaveDir, SetLastSaveDir);
@@ -157,6 +161,8 @@ protected:
 #define ADD_MAP_ALIAS(TYPE, ALIAS) \
     INIT_SECTION(TYPE, TApp::MapAliasWidgets()[#TYPE] = #ALIAS; )
 
+#define APP TApp::Single()
+
 enum class TAnswerFlag{ Before, Run, After};
 
 class TWidget : public TAppItem{
@@ -188,5 +194,59 @@ protected:
     bool isClosable = true; //флаг о том можно ли удалить виджет закрытием
     TMenuItem popup;
 };
+
+
+#include <set>
+//класс от которого должны использовать потоки чтобы приложение могло ожидать их завершения
+class TThreadApp{
+public:
+    virtual ~TThreadApp(){};
+
+    static void StartThread()
+    {
+        TLock lock(appMutex());
+        runThreads().insert(std::this_thread::get_id());//добавляем себя в выполняемые потоки
+    }
+    static void FinishThread()
+    {
+        TUniqueLock lock(appMutex());
+        runThreads().erase(std::this_thread::get_id());
+        std::notify_all_at_thread_exit(appCondition(), std::move(lock));
+    }
+
+    static void WaitFinishAllThread()
+    {
+        TUniqueLock lock(appMutex());
+        appCondition().wait(lock, []{ return runThreads().empty(); });
+    }
+private:
+    STATIC(std::mutex, appMutex);
+    STATIC(std::condition_variable, appCondition);
+    STATIC(std::set<std::thread::id>, runThreads)
+};
+
+class TThreadProgress : public TThreadApp{
+public:
+    //Функция запуска процесса, вызывается из главного потока
+    virtual TResult Run();
+    virtual void Reset();
+
+    STATIC_ARG(bool, NoThread, false)
+protected:
+    TPtrProgress prog;
+
+    void ThreadFuncImpl();
+    void NoThreadFuncImpl();
+
+    //функция вызываемая в главном потоке которая выполняет предварительные настройки
+    virtual TResult InitFunction();
+
+    //функция, которая выполняется в отдельном потоке и вызывает обновление прогресса
+    virtual TResult ThreadFunction();
+
+    //функция, которая выполняется в главном потоке и отображает результаты
+    virtual void ResultFunction(TResult res);
+};
+
 
 #endif //BASEAPP_APP_H
