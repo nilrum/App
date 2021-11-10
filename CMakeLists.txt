@@ -48,13 +48,16 @@ else()
 endif()
 
 add_library(App STATIC ${BASE_CPP})
+target_include_directories(App PUBLIC ${FETCH_DIR} ${App_DEPS_INCL})
+target_link_libraries(App PUBLIC Property)
 
 if(${BUILD_TEST})
     add_executable(AppTest
             tests/AppTest.cpp
             )
     target_include_directories(AppTest
-            PUBLIC ${FETCH_DIR}
+            PUBLIC ${FETCH_DIR}     #Подключаем каталог Libs
+            ${App_DEPS_INCL}        #Подключаем каталог Property и все каталоги от которых оно зависит
             )
     target_link_libraries(AppTest PUBLIC App gtest gtest_main gmock)
     enable_testing()
