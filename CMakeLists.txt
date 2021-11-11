@@ -34,13 +34,14 @@ try_compile(HAS_STD_EXPER_FS
         CMAKE_FLAGS -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
         LINK_LIBRARIES stdc++fs)
 
-if(HAS_STD_FS)
+if(HAS_STD_FS OR HAS_STD_FS_CACHE)
     message("Using std::filesystem")
     add_definitions("-DFILESYSTEM_STD")
-    set(PROPERTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Property CACHE FILEPATH "PROPERTY_DIR")
-elseif(HAS_STD_EXPER_FS)
+    set(HAS_STD_FS_CACHE ON CACHE BOOL "HAS_STD_FS_CACHE")
+elseif(HAS_STD_EXPER_FS OR HAS_STD_EXPER_FS_CACHE)
     message("Using std::experimental::filesystem")
     add_definitions("-DFILESYSTEM_EXPER")
+    set(HAS_STD_EXPER_FS_CACHE ON CACHE BOOL "HAS_STD_EXPER_FS_CACHE")
 else()
     message("Using own filesystem")
     add_definitions("-DFILESYSTEM_OWN")
