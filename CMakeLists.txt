@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(App)
 
 set(CMAKE_CXX_STANDARD 17)
+add_definitions("-DAPP_NAME=\"${CMAKE_PROJECT_NAME}\"")
 
 include(C:/CMakeProjects/Fetch.cmake)
 

@@ -38,7 +38,7 @@ CLASS_PTRS(Widget)
 
 class TApp : public TAppItem{
 public:
-    TApp(const TString& nameApp, const TString& titleApp = TString());
+    TApp(const TString& nameApp = APP_NAME, const TString& titleApp = TString());
     ~TApp();
 
     const TString& SecondTitle() const;//дополнительный текст для вывода рядом с меткой
