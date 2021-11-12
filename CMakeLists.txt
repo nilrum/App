@@ -13,6 +13,7 @@ set(BASE_HDR
         Progress.h
         MenuTree.h
         Translator.h
+        EditorWidget.h
         )
 set(BASE_CPP
         App.cpp
@@ -20,6 +21,7 @@ set(BASE_CPP
         Progress.cpp
         MenuTree.cpp
         Translator.cpp
+        EditorWidget.cpp
         )
 
 try_compile(HAS_STD_FS

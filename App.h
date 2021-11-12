@@ -12,6 +12,7 @@
 #include "MenuTree.h"
 #include "Progress.h"
 #include <condition_variable>
+#include <set>
 
 class TAppItem : public TPropertyClass{
 public:
@@ -110,8 +111,8 @@ public:
 
     //Создает виджет по типу
     virtual TPtrWidget CreateWidget(const TString& type);
-    using TMapAliasWidgets = std::map<TString, TString>;
-    STATIC(TMapAliasWidgets, MapAliasWidgets)
+    using TMapAliasTypes = std::map<TString, TString>;
+    STATIC(TMapAliasTypes, MapAliasWidgets)
 
     //Добавляет информацию в лог приложения
     void Log(const TString& value){};
@@ -195,8 +196,6 @@ protected:
     TMenuItem popup;
 };
 
-
-#include <set>
 //класс от которого должны использовать потоки чтобы приложение могло ожидать их завершения
 class TThreadApp{
 public:
@@ -248,5 +247,19 @@ protected:
     virtual void ResultFunction(TResult res);
 };
 
+
+#define CREATE_VIEW(TYPE) \
+    using TCreateView = std::function<std::shared_ptr<TYPE>()>; \
+    STATIC_ARG(TCreateView, CreateFunc, [](){ return std::make_shared<TYPE>();})
+
+#define CREATE_VIEW_SHARED(TYPE) \
+    using TCreateView = std::function<std::shared_ptr<TYPE>()>; \
+    STATIC_ARG(TCreateView, CreateFunc, [](){ return TYPE::CreateShared();})
+
+#define INIT_VIEW(TYPE) \
+    INIT_SECTION(TYPE, TYPE::CreateFunc() = [](){ return std::make_shared<TYPE>(); };)
+
+#define INIT_VIEW_SHARED(TYPE) \
+    INIT_SECTION(TYPE, TYPE::CreateFunc() = [](){ return TYPE::CreateShared(); };)
 
 #endif //BASEAPP_APP_H

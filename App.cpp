@@ -6,6 +6,7 @@
 #include "Property/Serialization.h"
 #include "Property/Algorithms.h"
 #include "FileSystem/FileSystem.h"
+#include "App/EditorWidget.h"
 
 INIT_PROPERTYS(TApp)
 
@@ -142,9 +143,9 @@ bool TApp::IsClose()
 
 void TApp::Options()
 {
-    /*auto view = TEditorView::CreateFunc()();
+    auto view = TEditorView::CreateFunc()();
     view->Editor()->SetIsShowType(true);
-    view->SetEditObject(SafePtrInterf(this));*/
+    view->SetEditObject(SafePtrInterf(this));
 }
 
 bool TApp::Close()
@@ -209,7 +210,7 @@ void TApp::About()
 
 TPtrWidget TApp::CreateWidget(const TString &type)
 {
-     auto& m = MapAliasWidgets();
+    auto& m = MapAliasWidgets();
     auto it = m.find(type);
     if(it != m.end())
         return ::CreateFromType<TPtrWidget>(it->second);
