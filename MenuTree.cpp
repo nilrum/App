@@ -3,7 +3,7 @@
 //
 
 #include "MenuTree.h"
-#include "Property/Algorithms.h"
+#include "Algorithms.h"
 
 TMenuItem::TMenuItem(const TString& t, TFunItemCall c, size_t p) noexcept
     :text(t), call(c), priority(p)

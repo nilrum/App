@@ -4,7 +4,7 @@
 
 #include "Translator.h"
 #include "Property/Serialization.h"
-#include "Property/Algorithms.h"
+#include "Algorithms.h"
 #include "FileSystem/FileSystem.h"
 
 INIT_PROPERTYS(TTranslator)

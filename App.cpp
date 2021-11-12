@@ -4,7 +4,7 @@
 
 #include "App.h"
 #include "Property/Serialization.h"
-#include "Property/Algorithms.h"
+#include "Algorithms.h"
 #include "FileSystem/FileSystem.h"
 #include "App/EditorWidget.h"
 

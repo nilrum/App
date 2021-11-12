@@ -3,7 +3,7 @@
 //
 
 #include "Progress.h"
-#include "Property/Algorithms.h"
+#include "Algorithms.h"
 
 bool TProgress::Progress(double value)
 {
