@@ -6,7 +6,7 @@
 #include "Property/Serialization.h"
 #include "Algorithms.h"
 #include "FileSystem/FileSystem.h"
-#include "App/EditorWidget.h"
+#include "EditorWidget.h"
 
 INIT_PROPERTYS(TApp)
 

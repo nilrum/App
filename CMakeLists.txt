@@ -51,6 +51,7 @@ else()
     set(BASE_CPP ${BASE_CPP} ${LIB_DIR}/FileSystem/OwnFileSystem.cpp)
 
 endif()
+
 if(NOT TARGET App)
     add_library(App STATIC ${BASE_CPP})
     target_include_directories(App PUBLIC ${FETCH_DIR} ${App_DEPS_INCL})
