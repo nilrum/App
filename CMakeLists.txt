@@ -50,10 +50,11 @@ else()
     set(BASE_CPP ${BASE_CPP} ${LIB_DIR}/FileSystem/OwnFileSystem.cpp)
 
 endif()
-
-add_library(App STATIC ${BASE_CPP})
-target_include_directories(App PUBLIC ${FETCH_DIR} ${App_DEPS_INCL})
-target_link_libraries(App PUBLIC Property)
+if(NOT TARGET App)
+    add_library(App STATIC ${BASE_CPP})
+    target_include_directories(App PUBLIC ${FETCH_DIR} ${App_DEPS_INCL})
+    target_link_libraries(App PUBLIC Property)
+endif()
 
 if(${BUILD_TEST})
     add_executable(AppTest
