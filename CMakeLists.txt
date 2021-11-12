@@ -40,7 +40,7 @@ try_compile(HAS_STD_EXPER_FS
 if(NOT TARGET App)
     add_library(App STATIC ${BASE_CPP})
     target_include_directories(App PUBLIC ${FETCH_DIR})
-    target_link_libraries(App PUBLIC Property)
+    target_link_libraries(App Property)
     target_compile_definitions(App PUBLIC APP_NAME="${CMAKE_PROJECT_NAME}")
     if(HAS_STD_FS)
         message("Using std::filesystem")
@@ -59,7 +59,7 @@ if(${BUILD_TEST})
     add_executable(AppTest
             tests/AppTest.cpp
             )
-    target_link_libraries(AppTest PUBLIC App gtest gtest_main gmock)
+    target_link_libraries(AppTest App gtest gtest_main gmock)
     enable_testing()
     add_test(NAME AppTest COMMAND AppTest)
 endif()
