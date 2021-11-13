@@ -63,3 +63,52 @@ if(${BUILD_TEST})
     enable_testing()
     add_test(NAME AppTest COMMAND AppTest)
 endif()
+
+if(NOT DEFINED QT_GUI)
+    set(QT_GUI ON)
+endif()
+
+#Если включен QT как GUI
+if(${QT_GUI})
+    if(MSVC)
+        set(CMAKE_PREFIX_PATH D:/DiskC/Qt/Qt5.15.0/5.15.0/msvc2019/lib/cmake)
+    else()
+        set(CMAKE_PREFIX_PATH D:/DiskC/Qt/Qt5.15.0/5.15.0/mingw81_32/lib/cmake)
+    endif()
+
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_AUTOUIC ON)
+
+    find_package(Qt5 COMPONENTS Core REQUIRED)
+    find_package(Qt5 COMPONENTS Widgets REQUIRED)
+    find_package(Qt5 COMPONENTS PrintSupport REQUIRED)
+
+    set(GUI_SRC
+            ${LIB_DIR}/Qt/AppQt.cpp
+            ${LIB_DIR}/Qt/MainWindowQt.cpp
+            ${LIB_DIR}/Qt/TimerQt.cpp
+            ${LIB_DIR}/Qt/ObjTreeQt.cpp
+            ${LIB_DIR}/Qt/EditorWidgetQt.cpp
+            ${LIB_DIR}/Qt/resources.qrc
+            )
+    set(GUI_LIBS
+            Qt5::Core
+            Qt5::Widgets
+            Qt5::PrintSupport
+            )
+    set(GUI_DIRS PUBLIC
+            ${LIB_DIR}/Qt
+            )
+    set(GUI_INIT_HDR "\"Qt/InitApp.h\"")
+endif()
+
+if(GUI_INIT_HDR)
+    add_executable(GuiApp main.cpp ${GUI_SRC})
+    target_include_directories(GuiApp PUBLIC
+            ${FETCH_DIR}
+            ${GUI_DIRS}
+            )
+    target_link_libraries(GuiApp App ${GUI_LIBS})
+    target_compile_definitions(GuiApp PUBLIC GUI_INIT_HDR=${GUI_INIT_HDR})
+endif()
