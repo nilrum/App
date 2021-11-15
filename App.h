@@ -26,6 +26,7 @@ protected:
     TString title;//отображаемое имя
 };
 
+CLASS_PTRS(AppItem)
 
 enum class TMessResult{ Yes, No };
 enum class TAppResult {
@@ -129,6 +130,7 @@ public:
       PROPERTY(TString, lastOpenDir, LastOpenDir, SetLastOpenDir);
       PROPERTY_READ(TTranslator, trans, Trans);
       PROPERTY_READ(TGlobalCustom, globalCustoms, GlobalCustoms);
+      PROPERTY(TAppItem, appItem, AppItem, SetAppItem);
     )
 
     TPtrMenuTree Menu() const;
@@ -139,6 +141,7 @@ public:
 
     PROPERTY_FUN(TString, lastSaveDir, LastSaveDir, SetLastSaveDir);
     PROPERTY_FUN(TString, lastOpenDir, LastOpenDir, SetLastOpenDir);
+    PROPERTY_FUN(TPtrAppItem, appItem, AppItem, SetAppItem);
 
     STATIC_ARG(TApp*, Single, nullptr);
 protected:
@@ -147,7 +150,7 @@ protected:
     TString customDir;
     TPtrMenuTree menu = TMenuTree::Create();
     TPtrTranslator trans = std::make_shared<TTranslator>();
-
+    TPtrAppItem appItem;
     TString lastSaveDir;    //последний каталог сохранения
     TString lastOpenDir;    //последний каталог открытия
 
