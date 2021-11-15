@@ -90,7 +90,7 @@ if(${QT_GUI})
             ${LIB_DIR}/Qt/TimerQt.cpp
             ${LIB_DIR}/Qt/ObjTreeQt.cpp
             ${LIB_DIR}/Qt/EditorWidgetQt.cpp
-            Qt/resources.qrc
+            ${LIB_DIR}/Qt/resources.qrc
             )
     set(GUI_LIBS
             Qt5::Core
