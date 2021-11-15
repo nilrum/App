@@ -90,7 +90,7 @@ if(${QT_GUI})
             ${LIB_DIR}/Qt/TimerQt.cpp
             ${LIB_DIR}/Qt/ObjTreeQt.cpp
             ${LIB_DIR}/Qt/EditorWidgetQt.cpp
-            #${LIB_DIR}/Qt/resources.qrc
+            Qt/resources.qrc
             )
     set(GUI_LIBS
             Qt5::Core
@@ -104,7 +104,7 @@ if(${QT_GUI})
 endif()
 
 if(GUI_INIT_HDR)
-    add_library(GuiApp ${GUI_SRC})
+    add_library(GuiApp OBJECT ${GUI_SRC})
     target_include_directories(GuiApp PUBLIC
             ${FETCH_DIR}
             ${GUI_DIRS}
