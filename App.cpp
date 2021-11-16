@@ -136,11 +136,6 @@ TResult TApp::InputItems(const TString &message, const TVecString &items, TStrin
     return TResult();
 }
 
-bool TApp::IsClose()
-{
-    return true;
-}
-
 void TApp::Options()
 {
     auto view = TEditorView::CreateFunc()();
@@ -150,7 +145,9 @@ void TApp::Options()
 
 bool TApp::Close()
 {
-    return IsClose();
+    bool res = true;
+    OnClose(res);
+    return res;
 }
 
 TResult TApp::SelectFile(const TString &filter, const TString &ext, TString &res)

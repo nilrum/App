@@ -60,7 +60,7 @@ public:
 
     virtual int Run();              //Запускает выполнение приложения, если конфигурации нет, то создает по умолчанию
     virtual bool Close();           //Завершает работу приложения
-    virtual bool IsClose();                 //можно ли закрыть приложение, возвращает true если будет закрыто
+    sigslot::signal<bool&> OnClose; //можно ли закрыть приложение, возвращает true если будет закрыто
 
     const TString& CustomDir() const;       //Каталог с основными настройками приложения
     void SetCustomDir(const TString& value);//Установить основной каталог приложения

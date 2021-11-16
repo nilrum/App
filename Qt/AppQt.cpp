@@ -22,7 +22,7 @@ TAppQt::TAppQt(const TString &nameApp, const TString &titleApp) : TApp(nameApp, 
     auto lay = new QVBoxLayout();
     mainWindow.reset(new TMainWindow());
     qApp->setWindowIcon(QIcon(":/icons/app.png"));
-    mainWindow->OnClose.connect( [this](bool& res){ res = IsClose(); });
+    mainWindow->OnClose.connect([this](bool& res){ bool r = true; OnClose(r); res = r;});
     mainWindow->setCentralWidget(new QWidget(mainWindow.get()));
     mainWindow->centralWidget()->setLayout(lay);
 
