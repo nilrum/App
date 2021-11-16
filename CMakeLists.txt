@@ -101,6 +101,7 @@ if(${QT_GUI})
             ${LIB_DIR}/Qt
             )
     set(GUI_INIT_HDR "\"Qt/InitApp.h\"")
+    set(Qt5Widgets_INCLUDE_DIRS ${Qt5Widgets_INCLUDE_DIRS} PARENT_SCOPE)
 endif()
 
 if(GUI_INIT_HDR)

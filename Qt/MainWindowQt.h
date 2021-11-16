@@ -11,7 +11,7 @@
 #include <QTabBar>
 #include <QVariant>
 #include <QTimer>
-#include <sigslot/include/sigslot/signal.hpp>
+#include <sigslot/signal.hpp>
 #include "Types.h"
 #include "../App.h"
 
@@ -40,8 +40,7 @@ void ConnectPopup(QWidget* qtWidget, TWidget* widget);
 
 class TChildWidget : public QWidget{
 public:
-    TChildWidget(QWidget* parent){};
-    virtual void SetMainWindow(TMainWindow* win){ mainWindow = win; };
+    TChildWidget(QWidget* parent = nullptr);
 
 protected:
     TMainWindow* mainWindow = nullptr;
@@ -90,8 +89,6 @@ public:
     TFloatWidget(QWidget* parent);
     ~TFloatWidget();
 
-    void SetMainWindow(TMainWindow* window) override;
-
     bool IsVisible() const override;
     void SetIsVisible(bool value) override;
 
@@ -104,7 +101,12 @@ protected:
 template<typename TypeWidget>
 TFloatWidget<TypeWidget>::TFloatWidget(QWidget *parent):TChildWidget(parent)
 {
-
+    if(mainWindow)
+    {
+        setMinimumSize(300, 500);
+        button = mainWindow->AddButton();
+        connect(button, &TVerticalButton::clicked, [this]() { QWidget::setVisible(!QWidget::isVisible()); });
+    }
 }
 
 template<typename TypeWidget>
@@ -113,16 +115,6 @@ TFloatWidget<TypeWidget>::~TFloatWidget()
     if(button)
         delete button;
 }
-
-template<typename TypeWidget>
-void TFloatWidget<TypeWidget>::SetMainWindow(TMainWindow *window)
-{
-    TChildWidget::SetMainWindow(window);
-    setMinimumSize(300, 500);
-    button = window->AddButton();
-    connect(button, &TVerticalButton::clicked, [this](){ QWidget::setVisible(!QWidget::isVisible()); });
-}
-
 
 template<typename TypeWidget>
 bool TFloatWidget<TypeWidget>::IsVisible() const
@@ -188,10 +180,12 @@ protected:
 };
 
 template<typename TypeWidget>
-TDockWidget<TypeWidget>::TDockWidget(QWidget *parent):QWidget(parent), TypeWidget()
+TDockWidget<TypeWidget>::TDockWidget(QWidget *parent):TChildWidget(parent), TypeWidget()
 {
     dock = new TDockClosable("");
     button = new TVerticalButton();
+    if(mainWindow)
+        SetMainWindow(mainWindow);
 }
 
 template<typename TypeWidget>
@@ -207,8 +201,6 @@ TDockWidget<TypeWidget>::~TDockWidget()
 template<typename TypeWidget>
 void TDockWidget<TypeWidget>::SetMainWindow(TMainWindow *window)
 {
-    TChildWidget::SetMainWindow(window);
-
     auto dockClosable = new TDockClosable(TRANSR(TypeWidget::title), window);
     //подключаемся к событию закрытия Dock
     dockClosable->OnDockClose.connect(

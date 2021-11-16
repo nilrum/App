@@ -248,14 +248,6 @@ TPtrTimer TAppQt::CreateTimer(const TTimer::TInterval& interval, const TTimerFun
 {
     return std::make_shared<TTimerQt>(interval, fun);
 }
-
-TPtrWidget TAppQt::CreateWidget(const TString &type)
-{
-    auto res = TApp::CreateWidget(type);
-    dynamic_cast<TChildWidget*>(res.get())->SetMainWindow(mainWindow.get());
-    return res;
-}
-
 //----------------------------------------------------------------------------------------------------------------------
 TProgressQt::TProgressQt(QWidget *parent) : QWidget(parent)
 {

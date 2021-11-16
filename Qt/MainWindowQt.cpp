@@ -3,6 +3,7 @@
 //
 
 #include "MainWindowQt.h"
+#include "AppQt.h"
 #include <QCloseEvent>
 
 #include <QToolBar>
@@ -137,3 +138,8 @@ bool LoadQtMenu(TMenuItem &popup, QMenu &menu)
     return res;
 }
 
+TChildWidget::TChildWidget(QWidget *parent): QWidget(parent)
+{
+    if(parent == nullptr)
+        mainWindow = dynamic_cast<TAppQt*>(APP)->MainWindow();
+};

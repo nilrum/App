@@ -30,8 +30,6 @@ public:
     TPtrProgress GetProgress() override;
 
     TPtrTimer CreateTimer(const TTimer::TInterval& interval, const TTimerFunction& fun) override;
-    TPtrWidget CreateWidget(const TString& type) override;
-
 private:
     std::unique_ptr<TMainWindow> mainWindow;
     QMenuBar* barMenu;

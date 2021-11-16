@@ -130,7 +130,7 @@ public:
       PROPERTY(TString, lastOpenDir, LastOpenDir, SetLastOpenDir);
       PROPERTY_READ(TTranslator, trans, Trans);
       PROPERTY_READ(TGlobalCustom, globalCustoms, GlobalCustoms);
-      PROPERTY(TAppItem, appItem, AppItem, SetAppItem);
+      PROPERTY_ARRAY(TAppItem, appItems, CountAppItems, AppItem, AddAppItem, DelAppItem);
     )
 
     TPtrMenuTree Menu() const;
@@ -141,7 +141,7 @@ public:
 
     PROPERTY_FUN(TString, lastSaveDir, LastSaveDir, SetLastSaveDir);
     PROPERTY_FUN(TString, lastOpenDir, LastOpenDir, SetLastOpenDir);
-    PROPERTY_FUN(TPtrAppItem, appItem, AppItem, SetAppItem);
+    PROPERTY_ARRAY_FUN_CHG(TPtrAppItem, appItems, CountAppItems, AppItem, AddAppItem, DelAppItem);
 
     STATIC_ARG(TApp*, Single, nullptr);
 protected:
@@ -150,7 +150,7 @@ protected:
     TString customDir;
     TPtrMenuTree menu = TMenuTree::Create();
     TPtrTranslator trans = std::make_shared<TTranslator>();
-    TPtrAppItem appItem;
+    std::vector<TPtrAppItem> appItems;
     TString lastSaveDir;    //последний каталог сохранения
     TString lastOpenDir;    //последний каталог открытия
 
