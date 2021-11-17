@@ -21,7 +21,7 @@ class TModelEditor;
 
 class TEditorWidgetQt : public TFloatWidget<TEditorWidget>{
 public:
-    TEditorWidgetQt(QWidget* parent);
+    TEditorWidgetQt(QWidget* parent = nullptr);
     void SetWidgetObject(const TPtrPropertyClass& value) override;
     void SetColumnTitles(const TVecString& value) override;
     void SetIsShowToolBar(bool value) override;
@@ -34,6 +34,8 @@ public:
 
     QAction* AddAction() { return addAction; }
     QAction* DelAction() { return delAction; }
+
+    PROPERTIES(TEditorWidgetQt, TEditorWidget,)
 private:
     QTreeView* treeView;
     QToolBar* toolBar;

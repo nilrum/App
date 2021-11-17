@@ -37,6 +37,7 @@ TApp::TApp(const TString &nameApp, const TString &titleApp)
     menu->AddItem("Help|About", [this]() { About(); });
 
     //HISTORY_IF(HISTORY->SetTrans([](const TString& value){ return TRANS(value); });)
+    OnBeforeRun.connect([this]() { menu->OnChange(); });
 }
 
 TApp::~TApp()
@@ -82,19 +83,11 @@ TResult TApp::SaveCustoms(bool def)
 
 int TApp::Run()
 {
-    BeforeRun();
-    AfterRun();
+    OnBeforeRun();
+    OnAfterRun();
     return 0;
 }
 
-void TApp::BeforeRun()
-{
-    menu->OnChange();
-}
-
-void TApp::AfterRun()
-{
-}
 
 const TString &TApp::CustomDir() const
 {

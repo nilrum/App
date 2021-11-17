@@ -66,8 +66,6 @@ public:
     TDockWidget(QWidget* parent);
     ~TDockWidget();
 
-    void SetMainWindow(TMainWindow* window) override;
-
     bool IsVisible() const override;
     void SetIsVisible(bool value) override;
 
@@ -80,6 +78,8 @@ protected:
 
     bool IsDockActive() const;
     void SetDockActive();
+
+    void SetMainWindow(TMainWindow *window);
 
 };
 

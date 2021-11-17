@@ -38,12 +38,12 @@ TAppQt::TAppQt(const TString &nameApp, const TString &titleApp) : TApp(nameApp, 
 
 int TAppQt::Run()
 {
-    BeforeRun();
+    OnBeforeRun();
+    //мб было и в OnBeforeRun засунуть, но раз переопределяем, то не стал
     mainWindow->setWindowTitle(TRANSR(title));//переводим только после загрузки переводчика
     mainWindow->showMaximized();
-    BeforeShowing();
     int res = QApplication::exec();
-    AfterRun();
+    OnAfterRun();
     return res;
 }
 

@@ -13,6 +13,7 @@
 #include <QFormLayout>
 #include <QMenu>
 
+INIT_PROPERTYS(TEditorWidgetQt)
 ADD_MAP_ALIAS(TEditorWidget, TEditorWidgetQt)
 INIT_VIEW(TEditorViewQt)
 

@@ -136,8 +136,8 @@ public:
     TPtrMenuTree Menu() const;
     TPtrTranslator Trans() const;
     TPtrGlobalCustom GlobalCustoms() const;
-
-    TOnNotify BeforeShowing;                    //событие перед показом главной формы
+    TOnNotify OnBeforeRun;
+    TOnNotify OnAfterRun;
 
     PROPERTY_FUN(TString, lastSaveDir, LastSaveDir, SetLastSaveDir);
     PROPERTY_FUN(TString, lastOpenDir, LastOpenDir, SetLastOpenDir);
@@ -157,9 +157,6 @@ protected:
     std::vector<TPtrProgress> progresses;
 
     inline TString FileName() const { return name + ".xml"; } //имя файла настроек
-
-    void BeforeRun();
-    void AfterRun();
 };
 
 #define ADD_MAP_ALIAS(TYPE, ALIAS) \
