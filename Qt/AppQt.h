@@ -18,6 +18,7 @@ public:
     ~TAppQt();
 
     TMainWindow* MainWindow() { return mainWindow.get(); }
+    TNativeMainWindow* NativeMainWindow() override { return MainWindow(); }
 
     void SetTitle(const TString& value) override;
     void SetSecondTitle(const TString& value) override;
@@ -30,6 +31,7 @@ public:
     TPtrProgress GetProgress() override;
 
     TPtrTimer CreateTimer(const TTimer::TInterval& interval, const TTimerFunction& fun) override;
+
 private:
     std::unique_ptr<TMainWindow> mainWindow;
     QMenuBar* barMenu;

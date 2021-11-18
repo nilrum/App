@@ -37,6 +37,11 @@ enum class TAppResult {
 class TWidget;
 CLASS_PTRS(Widget)
 
+class TNativeMainWindow{
+public:
+    virtual ~TNativeMainWindow(){};
+};
+
 class TApp : public TAppItem{
 public:
     TApp(const TString& nameApp = APP_NAME, const TString& titleApp = TString());
@@ -138,6 +143,11 @@ public:
     TPtrGlobalCustom GlobalCustoms() const;
     TOnNotify OnBeforeRun;
     TOnNotify OnAfterRun;
+
+    virtual TNativeMainWindow* NativeMainWindow(){ return nullptr; }
+
+    template<typename T>
+        T CustMainWindow(){ return dynamic_cast<T>(NativeMainWindow()); }
 
     PROPERTY_FUN(TString, lastSaveDir, LastSaveDir, SetLastSaveDir);
     PROPERTY_FUN(TString, lastOpenDir, LastOpenDir, SetLastOpenDir);

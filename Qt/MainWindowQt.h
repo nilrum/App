@@ -18,7 +18,7 @@
 class TVerticalButton;
 class TMainWindow;
 
-class TMainWindow : public QMainWindow{
+class TMainWindow : public QMainWindow, public TNativeMainWindow{
 public:
     using TOnClose = sigslot::signal<bool&>;
     TOnClose OnClose;
@@ -40,7 +40,7 @@ void ConnectPopup(QWidget* qtWidget, TWidget* widget);
 
 class TChildWidget : public QWidget{
 public:
-    TChildWidget(QWidget* parent = nullptr);
+    TChildWidget(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 
 protected:
     TMainWindow* mainWindow = nullptr;
@@ -99,7 +99,7 @@ protected:
 };
 
 template<typename TypeWidget>
-TFloatWidget<TypeWidget>::TFloatWidget(QWidget *parent):TChildWidget(parent)
+TFloatWidget<TypeWidget>::TFloatWidget(QWidget *parent):TChildWidget(parent, Qt::Tool)
 {
     if(mainWindow)
     {

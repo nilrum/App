@@ -138,8 +138,8 @@ bool LoadQtMenu(TMenuItem &popup, QMenu &menu)
     return res;
 }
 
-TChildWidget::TChildWidget(QWidget *parent): QWidget(parent)
+TChildWidget::TChildWidget(QWidget *parent, Qt::WindowFlags f): QWidget(parent, f)
 {
     if(parent == nullptr)
-        mainWindow = dynamic_cast<TAppQt*>(APP)->MainWindow();
+        mainWindow = APP->CustMainWindow<TMainWindow*>();
 };
