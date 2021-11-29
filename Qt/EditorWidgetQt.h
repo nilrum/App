@@ -163,6 +163,8 @@ public:
     TEnumComboBox(QWidget* parent = nullptr, bool isDef = false);
     void setValue(QVariant value);
     QVariant value() const;
+    using TFunConvert = std::function<TVecString(const TEnumInfo&)>;
+    STATIC(TFunConvert, FunConvert)
 protected:
     TEnum enumValue;
     size_t begin = 0;//с какого индекса выводить список TEnum

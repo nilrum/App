@@ -128,7 +128,10 @@ bool LoadQtMenu(TMenuItem &popup, QMenu &menu)
         {
             if(it.CountItems() == 0)
             {
-                menu.addAction(TRANSR(it.Text()), it.Call());
+                if(it.Call().operator bool())
+                    menu.addAction(TRANSR(it.Text()), it.Call());
+                else
+                    menu.addAction(TRANSR(it.Text()));
                 res = true;
             }
             else

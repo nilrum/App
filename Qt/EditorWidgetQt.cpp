@@ -594,14 +594,15 @@ void TEnumComboBox::setValue(QVariant value)
     clear();
     //заполняем возможные варианты перечисления
     const TEnumInfo& info = TEnumInfo::EnumInfo(enumValue.Info());
-    if(info.ConvertCategory() == 0)
-        for(auto i = 0; i < info.CountNames(); i++)
+    if(info.ConvertCategory() == 0 || !FunConvert())
+        for(auto i = begin; i < info.CountNames(); i++)
             addItem(TRANSR(info.Name(i)), i);
-
-
-    //TEnumInfoDisplayValue convert();
-    //for(int i = begin; i < convert.Count(); i++)
-        //addItem(convert.FromIndex(i), i);
+    else
+    {
+        TVecString res = FunConvert()(info);
+        for(auto i = begin; i < res.size(); i++)
+            addItem(TRANSR(res[i]), i);
+    }
 
     if(count()) setCurrentIndex(enumValue.Index() - begin);
 }
