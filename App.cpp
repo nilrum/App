@@ -194,7 +194,7 @@ TPtrTimer TApp::CreateTimer(const TTimer::TInterval& interval, const TTimerFunct
 void TApp::About()
 {
 #ifdef APP_VER
-    ShowMessage(Name() + "\nDeveloper: Minnullin I Z\nVersion: " APP_VER);
+    ShowMessage(TRANS(Name()) + "\nDeveloper: Minnullin I Z\nVersion: " APP_VER);
 #endif
 }
 
