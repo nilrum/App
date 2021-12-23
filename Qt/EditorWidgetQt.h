@@ -19,12 +19,13 @@
 
 class TModelEditor;
 
-class TEditorWidgetQt : public TFloatWidget<TEditorWidget>{
+class TEditorWidgetQt : public TDockWidget<TEditorWidget>{
 public:
     TEditorWidgetQt(QWidget* parent = nullptr);
     void SetWidgetObject(const TPtrPropertyClass& value) override;
     void SetColumnTitles(const TVecString& value) override;
     void SetIsShowToolBar(bool value) override;
+    void SetIsButtons(bool value) override;
     TPropertyEditor& SetIsShowType(bool value) override;
 
     TPtrPropertyClass SelectObject() const override;
@@ -39,13 +40,19 @@ public:
 private:
     QTreeView* treeView;
     QToolBar* toolBar;
+    QDialogButtonBox* box = nullptr;
     QAction* addAction;
     QAction* delAction;
     std::shared_ptr<TModelEditor> model;
     QModelIndex editingRescan;
+
     void Init();
     void AddObject();
     void DelObject();
+
+    void OnOk();
+    void OnApply();
+    void OnCancel();
 };
 
 class TCreateView : public QDialog{
@@ -99,6 +106,7 @@ public:
 
     TOnNotify OnBeginRescan;
     TOnNotify OnEndRescan;
+    TOnNotify OnDeleteObj;
 protected:
     bool BeginDelete(TObjTree* objTree) override;
     void EndDelete(TObjTree* objTree) override;

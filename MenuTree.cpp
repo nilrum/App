@@ -136,3 +136,8 @@ const TPtrMenuItem& TMenuTree::AddItem(const TString text, TFunItemCall call, si
     return parent->Add(splits.back(), call, priority);
 }
 
+const TPtrMenuItem &TMenuTree::AddItem(const TString text, size_t priority)
+{
+    return AddItem(text, TFunItemCall(), priority);
+}
+

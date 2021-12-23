@@ -59,6 +59,7 @@ protected:
     QSize minimumSizeHint() const;
     QSize GetTextSize() const;
 };
+class TDockClosable;
 
 template<typename TypeWidget>
 class TDockWidget : public TChildWidget, public TypeWidget{
@@ -71,9 +72,12 @@ public:
 
     void SetTitle(const TString& value) override;
     void SetIsClosable(bool value) override;
+
+    void SetFloatingState(bool value);
 protected:
-    QDockWidget* dock = nullptr;
+    TDockClosable* dock = nullptr;
     TVerticalButton* button = nullptr;
+    bool isFloatingState = false;
     void ButtonClicked();
 
     bool IsDockActive() const;
@@ -82,62 +86,6 @@ protected:
     void SetMainWindow(TMainWindow *window);
 
 };
-
-template<typename TypeWidget>
-class TFloatWidget : public TChildWidget, public TypeWidget{
-public:
-    TFloatWidget(QWidget* parent);
-    ~TFloatWidget();
-
-    bool IsVisible() const override;
-    void SetIsVisible(bool value) override;
-
-    void SetTitle(const TString& value) override;
-    //void SetIsClosable(bool value) override;
-protected:
-    TVerticalButton* button = nullptr;
-};
-
-template<typename TypeWidget>
-TFloatWidget<TypeWidget>::TFloatWidget(QWidget *parent):TChildWidget(parent, Qt::Tool)
-{
-    if(mainWindow)
-    {
-        setMinimumSize(300, 500);
-        button = mainWindow->AddButton();
-        connect(button, &TVerticalButton::clicked, [this]() { QWidget::setVisible(!QWidget::isVisible()); });
-    }
-}
-
-template<typename TypeWidget>
-TFloatWidget<TypeWidget>::~TFloatWidget()
-{
-    if(button)
-        delete button;
-}
-
-template<typename TypeWidget>
-bool TFloatWidget<TypeWidget>::IsVisible() const
-{
-    return QWidget::isVisible();
-}
-
-template<typename TypeWidget>
-void TFloatWidget<TypeWidget>::SetIsVisible(bool value)
-{
-    QWidget::setVisible(value);
-}
-
-template<typename TypeWidget>
-void TFloatWidget<TypeWidget>::SetTitle(const TString &value)
-{
-    TypeWidget::SetTitle(value);
-    setWindowTitle(TRANSR(value));
-    if(button)
-        button->SetThisText(TRANSR(value));
-}
-
-
 
 template <typename T>
 class TWaitCall{
@@ -182,10 +130,11 @@ protected:
 template<typename TypeWidget>
 TDockWidget<TypeWidget>::TDockWidget(QWidget *parent):TChildWidget(parent), TypeWidget()
 {
-    dock = new TDockClosable("");
     button = new TVerticalButton();
     if(mainWindow)
         SetMainWindow(mainWindow);
+    else
+        dock = new TDockClosable("");
 }
 
 template<typename TypeWidget>
@@ -201,19 +150,23 @@ TDockWidget<TypeWidget>::~TDockWidget()
 template<typename TypeWidget>
 void TDockWidget<TypeWidget>::SetMainWindow(TMainWindow *window)
 {
-    auto dockClosable = new TDockClosable(TRANSR(TypeWidget::title), window);
+    dock = new TDockClosable(TRANSR(TypeWidget::title), window);
     //подключаемся к событию закрытия Dock
-    dockClosable->OnDockClose.connect(
+    dock->OnDockClose.connect(
             [this, window]()
             {
                 window->UnDock(dock);   //удалим Dock из главного окна
                 delete button;                //удалим кнопку с панели инструментов
-                TypeWidget::OnClose();        //вызовим событие закрытия виджета
+                TypeWidget::OnClose();        //вызовем событие закрытия виджета
             });
+    connect(dock, &QDockWidget::topLevelChanged, [this](bool isFl){ isFloatingState = isFl; });
 
-    dock = dockClosable;
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     dock->setWidget(this);
+
+    dock->setMinimumSize(200, 200);
+    dock->setBaseSize(300, 400);
+
     //для дока разрешаем если необходимо кнопку закрытия
     if(TypeWidget::isClosable == false)
         dock->setFeatures(dock->features() ^ QDockWidget::DockWidgetClosable);
@@ -251,6 +204,13 @@ void TDockWidget<TypeWidget>::SetIsVisible(bool value)
 {
     dock->setVisible(value);
     if(value && IsDockActive() == false) SetDockActive();
+    if(value && isFloatingState && dock->isFloating() == false)
+        {
+            dock->setFloating(true);
+            auto size = dock->baseSize();
+            auto p = mainWindow->rect().center() - QPoint(size.width(), size.height()) / 2.;
+            dock->setGeometry(p.x(), p.y(), size.width(), size.height());
+        }
 }
 
 template<typename TypeWidget>
@@ -292,6 +252,11 @@ void TDockWidget<TypeWidget>::SetIsClosable(bool value)
         dock->setFeatures(dock->features() ^ QDockWidget::DockWidgetClosable);
 }
 
+template<typename TypeWidget>
+void TDockWidget<TypeWidget>::SetFloatingState(bool value)
+{
+    isFloatingState = value;
+}
 
 
 template <typename T>

@@ -12,6 +12,7 @@
 #include <QToolBar>
 #include <QFormLayout>
 #include <QMenu>
+#include <Algorithms.h>
 
 INIT_PROPERTYS(TEditorWidgetQt)
 ADD_MAP_ALIAS(TEditorWidget, TEditorWidgetQt)
@@ -22,15 +23,19 @@ TObjTree* IndexTo(const QModelIndex &value)
     return static_cast<TObjTree*>(value.internalPointer());
 }
 
-TEditorWidgetQt::TEditorWidgetQt(QWidget *parent) : TFloatWidget<TEditorWidget>(parent)
+TEditorWidgetQt::TEditorWidgetQt(QWidget *parent) : TDockWidget<TEditorWidget>(parent)
 {
     Init();
+    SetFloatingState(true);//т.к. не сохраняет размеры после скрытия и отображения, то сначала установим в док а потом уже открепим
+    //dock->setFloating(true);
+    dock->setVisible(false);
 }
 
 void TEditorWidgetQt::Init()
 {
     auto lay = new QVBoxLayout();
     lay->setMargin(0);
+
     setLayout(lay);
 
     toolBar = new QToolBar(this);
@@ -59,14 +64,14 @@ void TEditorWidgetQt::Init()
     //сохраняем редактируемый индекс
     model->OnBeginRescan.connect([this, delegate](){ editingRescan = delegate->EditingIndex(); });
     //если редактируемый индекс был заново запустим его редактирование
-    model->OnEndRescan.connect([this, t = treeView]()
+    model->OnEndRescan.connect([this]()
         {
             if(editingRescan.isValid())
-                t->edit(t->model()->index(editingRescan.row(), 1));
+                treeView->edit(treeView->model()->index(editingRescan.row(), 1));
             //первый элемент дерева всегда открыт
-            t->expand(t->model()->index(0, 0));
+            treeView->expand(treeView->model()->index(0, 0));
         });
-
+    model->OnDeleteObj.connect([this](){ SetTitle(Obj().expired() ? "" : LockObj()->Name() ); });
     treeView->setModel(model.get());
     lay->addWidget(treeView);
 }
@@ -75,10 +80,7 @@ void TEditorWidgetQt::SetWidgetObject(const TPtrPropertyClass &value)
 {
     SetObject(value);
     treeView->header()->setSectionsClickable(true);
-    if(value)
-    {
-        SetTitle(value->Name());
-    }
+    SetTitle(value ? value->Name() : "");
 }
 
 void TEditorWidgetQt::AddObject()
@@ -136,6 +138,39 @@ TPtrPropertyClass TEditorWidgetQt::SelectObject() const
     if(obj->IsProp()) return TPtrPropertyClass();
 
     return obj->LockObj();
+}
+
+void TEditorWidgetQt::SetIsButtons(bool value)
+{
+    TEditorWidget::SetIsButtons(value);
+    if(isButtons && box == nullptr)
+    {
+        box = new QDialogButtonBox(this);
+        connect(box->addButton(TRANSR("Apply"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnApply, this));
+        connect(box->addButton(TRANSR("OK"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnOk, this));
+        connect(box->addButton(TRANSR("Cancel"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnCancel, this));
+        layout()->setContentsMargins(0, 0, 2, 5);
+        layout()->addWidget(box);
+    }
+    if(box)
+        box->setVisible(value);
+}
+
+void TEditorWidgetQt::OnOk()
+{
+    OnButton(TTypeButton::Ok);
+    dock->OnDockClose();
+}
+
+void TEditorWidgetQt::OnApply()
+{
+    OnButton(TTypeButton::Apply);
+}
+
+void TEditorWidgetQt::OnCancel()
+{
+    OnButton(TTypeButton::Cancel);
+    dock->OnDockClose();
 }
 
 //----------------------------------TCreateView------------------------------------------------------------------------
@@ -408,6 +443,7 @@ bool TModelEditor::BeginDelete(TObjTree *objTree)
 void TModelEditor::EndDelete(TObjTree *objTree)
 {
     endRemoveRows();
+    OnDeleteObj();
 }
 
 void TModelEditor::BeginAdd(TObjTree *objTree)

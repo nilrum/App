@@ -28,9 +28,13 @@ TApp::TApp(const TString &nameApp, const TString &titleApp)
     title = titleApp;
     customDir = (fs::current_path() / "customs").string();
 
+    menu->AddItem("File", TFunItemCall(), 200);
+    menu->AddItem("Edit", TFunItemCall(), 190);
+    menu->AddItem("Tools", TFunItemCall(), 180);
+    menu->AddItem("Help", TFunItemCall(), 170);
+
     menu->AddItem("File|-", TFunItemCall(), lowPriority );
     menu->AddItem("File|Close", [this]() { Close(); }, lowPriority)->SetIndexImg(2).SetShortcut("Ctrl+Q");
-    menu->AddItem("Edit");
     menu->AddItem("Tools|Options", [this]() { Options(); })->SetShortcut("Ctrl+Alt+W");//SetIndexImg(5).SetVisible(false);
     menu->AddItem("Tools|Language|Russian", [this](){ trans->SetLang(lgRus); menu->OnChange(); });
     menu->AddItem("Tools|Language|English", [this](){ trans->SetLang(lgEng); menu->OnChange(); });

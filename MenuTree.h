@@ -99,6 +99,7 @@ class TMenuTree : public TMenuItem{
 public:
     static TPtrMenuTree Create();
     const TPtrMenuItem& AddItem(const TString text, TFunItemCall call = TFunItemCall(), size_t priority = defPriority);
+    const TPtrMenuItem& AddItem(const TString text, size_t priority);
     sigslot::signal<> OnChange;
 private:
     TMenuTree(){};

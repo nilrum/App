@@ -10,6 +10,8 @@
 
 using TCreateEditorObj = std::function<void(const TPtrObjTree&)>;
 
+enum class TTypeButton{Cancel, Ok, Apply};
+
 class TEditorWidget : public TWidget, public TPropertyEditor{
 public:
     TEditorWidget();
@@ -19,10 +21,17 @@ public:
     virtual TPtrPropertyClass SelectObject() const { return TPtrPropertyClass(); }
 
     void SetCreateFun(const TCreateEditorObj& value) { createFun = value; }
+
+    bool IsButtons() const;
+    virtual void SetIsButtons(bool value);
+
+    sigslot::signal<TTypeButton> OnButton;
+
     PROPERTIES(TEditorWidget, TWidget)
 
 protected:
     TCreateEditorObj createFun;
+    bool isButtons = false;
 };
 
 class TEditorView{
@@ -32,4 +41,5 @@ public:
     virtual TPropertyEditor* Editor() { return nullptr; }
 };
 
+CLASS_PTRS(EditorWidget)
 #endif //ATHENA_EDITORWIDGET_H

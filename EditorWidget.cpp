@@ -11,3 +11,13 @@ TEditorWidget::TEditorWidget()
     name = "EditorWidget";
     title = "Editor";
 }
+
+bool TEditorWidget::IsButtons() const
+{
+    return isButtons;
+}
+
+void TEditorWidget::SetIsButtons(bool value)
+{
+    isButtons = value;
+}
