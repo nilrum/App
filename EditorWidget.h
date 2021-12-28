@@ -25,7 +25,7 @@ public:
     bool IsButtons() const;
     virtual void SetIsButtons(bool value);
 
-    sigslot::signal<TTypeButton> OnButton;
+    sigslot::signal<TTypeButton, TResult&> OnButton;
 
     PROPERTIES(TEditorWidget, TWidget)
 

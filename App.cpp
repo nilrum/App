@@ -40,7 +40,7 @@ TApp::TApp(const TString &nameApp, const TString &titleApp)
     menu->AddItem("Tools|Language|English", [this](){ trans->SetLang(lgEng); menu->OnChange(); });
     menu->AddItem("Help|About", [this]() { About(); });
 
-    //HISTORY_IF(HISTORY->SetTrans([](const TString& value){ return TRANS(value); });)
+    HISTORY_IF(HISTORY->SetTrans([](const TString& value){ return TRANS(value); });)
     OnBeforeRun.connect([this]() { menu->OnChange(); });
 }
 
@@ -137,6 +137,7 @@ void TApp::Options()
 {
     auto view = TEditorView::CreateFunc()();
     view->Editor()->SetIsShowType(true);
+    view->Editor()->Tree().SetIsUseHistory(false);
     view->SetEditObject(SafePtrInterf(this));
 }
 

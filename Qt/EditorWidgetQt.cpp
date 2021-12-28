@@ -158,18 +158,24 @@ void TEditorWidgetQt::SetIsButtons(bool value)
 
 void TEditorWidgetQt::OnOk()
 {
-    OnButton(TTypeButton::Ok);
-    dock->OnDockClose();
+    TResult res;
+    OnButton(TTypeButton::Ok, res);
+    APP->ShowError(res);
+    if(res.IsNoError())
+        dock->OnDockClose();
 }
 
 void TEditorWidgetQt::OnApply()
 {
-    OnButton(TTypeButton::Apply);
+    TResult res;
+    OnButton(TTypeButton::Apply, res);
+    APP->ShowError(res);
 }
 
 void TEditorWidgetQt::OnCancel()
 {
-    OnButton(TTypeButton::Cancel);
+    TResult res;
+    OnButton(TTypeButton::Cancel, res);
     dock->OnDockClose();
 }
 
