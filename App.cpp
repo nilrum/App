@@ -60,7 +60,7 @@ TResult TApp::LoadCustoms(bool def)
     {
         customPath = customDir;
         customPath /= FileName();
-        if(fs::exists(customPath) == false)
+        if(fs::exists(customPath) == false)//если каталога с настройками нет то пробуем грузится из корня
             customPath = FileName();
     }
 

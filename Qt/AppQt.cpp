@@ -12,7 +12,7 @@
 #include <QFileDialog>
 #include <QStatusBar>
 #include "TimerQt.h"
-#include "../FileSystem/FileSystem.h"
+#include "Base/FileSystem/FileSystem.h"
 
 
 INIT_PROPERTYS(TAppQt)

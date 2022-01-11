@@ -5,7 +5,7 @@
 #ifndef NEO_PROGRESS_H
 #define NEO_PROGRESS_H
 
-#include "Property/Result.h"
+#include "Base/Result.h"
 #include <mutex>
 #include "sigslot/signal.hpp"
 

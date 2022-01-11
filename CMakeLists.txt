@@ -22,20 +22,7 @@ set(BASE_CPP
         MenuTree.cpp
         Translator.cpp
         EditorWidget.cpp
-        ${LIB_DIR}/FileSystem/OwnFileSystem.cpp
         )
-
-try_compile(HAS_STD_FS
-        "${CMAKE_BINARY_DIR}/temp"
-        "${LIB_DIR}/FileSystem/TestStdFileSystem.cpp"
-        CMAKE_FLAGS -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
-        )
-
-try_compile(HAS_STD_EXPER_FS
-        "${CMAKE_BINARY_DIR}/temp"
-        "${LIB_DIR}/FileSystem/TestExperFileSystem.cpp"
-        CMAKE_FLAGS -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_STANDARD_REQUIRED=ON
-        LINK_LIBRARIES stdc++fs)
 
 if(NOT TARGET App)
     add_library(App STATIC ${BASE_CPP})
@@ -43,17 +30,6 @@ if(NOT TARGET App)
     target_link_libraries(App Property)
     target_compile_definitions(App PUBLIC APP_NAME="${CMAKE_PROJECT_NAME}")
     target_compile_definitions(App PUBLIC APP_VER="${APP_VER}")
-    if(HAS_STD_FS)
-        message("Using std::filesystem")
-        target_compile_definitions(App PUBLIC FILESYSTEM_STD)
-    elseif(HAS_STD_EXPER_FS)
-        message("Using std::experimental::filesystem")
-        target_compile_definitions(App PUBLIC FILESYSTEM_EXPER)
-        target_link_libraries(App PUBLIC stdc++fs)
-    else()
-        message("Using own filesystem")
-        target_compile_definitions(App PUBLIC FILESYSTEM_OWN)
-    endif()
 endif()
 
 if(${BUILD_TEST})

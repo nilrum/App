@@ -6,7 +6,7 @@
 #define BASEAPP_APP_H
 
 #include "Property/GlobalCustom.h"
-#include "Property/Result.h"
+#include "Base/Result.h"
 #include "Translator.h"
 #include "Timer.h"
 #include "MenuTree.h"
