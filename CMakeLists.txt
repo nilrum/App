@@ -82,6 +82,9 @@ if(${QT_GUI})
 endif()
 
 if(GUI_INIT_HDR)
+    add_library(GuiLib OBJECT)
+    target_link_libraries(GuiLib ${GUI_LIBS})
+
     add_library(GuiApp OBJECT ${GUI_SRC})
     target_include_directories(GuiApp PUBLIC
             ${FETCH_DIR}

@@ -36,6 +36,8 @@ public:
     QAction* AddAction() { return addAction; }
     QAction* DelAction() { return delAction; }
 
+    bool IsAutoOpenFirst() const { return isAutoOpenFirst; }
+    void SetIsAutoOpenFirst(bool value) { isAutoOpenFirst = value; }
     PROPERTIES(TEditorWidgetQt, TEditorWidget,)
 private:
     QTreeView* treeView;
@@ -45,7 +47,7 @@ private:
     QAction* delAction;
     std::shared_ptr<TModelEditor> model;
     QModelIndex editingRescan;
-
+    bool isAutoOpenFirst = true;
     void Init();
     void AddObject();
     void DelObject();

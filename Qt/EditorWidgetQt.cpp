@@ -69,7 +69,7 @@ void TEditorWidgetQt::Init()
             if(editingRescan.isValid())
                 treeView->edit(treeView->model()->index(editingRescan.row(), 1));
             //первый элемент дерева всегда открыт
-            treeView->expand(treeView->model()->index(0, 0));
+            if(isAutoOpenFirst) treeView->expand(treeView->model()->index(0, 0));
         });
     model->OnDeleteObj.connect([this](){ SetTitle(Obj().expired() ? "" : LockObj()->Name() ); });
     treeView->setModel(model.get());
