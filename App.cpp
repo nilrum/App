@@ -36,8 +36,9 @@ TApp::TApp(const TString &nameApp, const TString &titleApp)
     menu->AddItem("File|-", TFunItemCall(), lowPriority );
     menu->AddItem("File|Close", [this]() { Close(); }, lowPriority)->SetIndexImg(2).SetShortcut("Ctrl+Q");
     menu->AddItem("Tools|Options", [this]() { Options(); })->SetShortcut("Ctrl+Alt+W");//SetIndexImg(5).SetVisible(false);
-    menu->AddItem("Tools|Language|Russian", [this](){ trans->SetLang(lgRus); menu->OnChange(); });
-    menu->AddItem("Tools|Language|English", [this](){ trans->SetLang(lgEng); menu->OnChange(); });
+    menu->AddItem("Tools|Language|Russian", [this](){ trans->SetLang(lgRus); menu->OnChange(); })
+        ->SetIsCheckable(true).SetIsChecked(true);
+    menu->AddItem("Tools|Language|English", [this](){ trans->SetLang(lgEng); menu->OnChange(); })->SetIsCheckable(true);
     menu->AddItem("Help|About", [this]() { About(); });
 
     HISTORY_IF(HISTORY->SetTrans([](const TString& value){ return TRANS(value); });)

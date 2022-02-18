@@ -171,8 +171,18 @@ class TEnumComboBox : public QComboBox{
     Q_PROPERTY(QVariant value READ value WRITE setValue USER true)
 public:
     TEnumComboBox(QWidget* parent = nullptr, bool isDef = false);
+
     void setValue(QVariant value);
     QVariant value() const;
+
+    void SetEnum(const TEnum& value);
+
+    int EnumIndex() const;
+    void SetEnumIndex(int index);
+
+    double EnumValue() const;
+    void SetEnumValue(double value);
+
     using TFunConvert = std::function<TVecString(const TEnumInfo&)>;
     STATIC(TFunConvert, FunConvert)
 protected:

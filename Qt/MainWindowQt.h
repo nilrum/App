@@ -59,6 +59,7 @@ protected:
     QSize minimumSizeHint() const;
     QSize GetTextSize() const;
 };
+
 class TDockClosable;
 
 template<typename TypeWidget>
@@ -155,9 +156,10 @@ void TDockWidget<TypeWidget>::SetMainWindow(TMainWindow *window)
     dock->OnDockClose.connect(
             [this, window]()
             {
-                window->UnDock(dock);   //удалим Dock из главного окна
-                delete button;                //удалим кнопку с панели инструментов
-                TypeWidget::OnClose();        //вызовем событие закрытия виджета
+                if(TypeWidget::isClosable == false) return;
+                window->UnDock(dock);           //удалим Dock из главного окна
+                delete button;                  //удалим кнопку с панели инструментов
+                TypeWidget::OnClose();          //вызовем событие закрытия виджета
             });
     connect(dock, &QDockWidget::topLevelChanged, [this](bool isFl){ isFloatingState = isFl; });
 
@@ -168,8 +170,8 @@ void TDockWidget<TypeWidget>::SetMainWindow(TMainWindow *window)
     dock->setBaseSize(300, 400);
 
     //для дока разрешаем если необходимо кнопку закрытия
-    if(TypeWidget::isClosable == false)
-        dock->setFeatures(dock->features() ^ QDockWidget::DockWidgetClosable);
+    //if(TypeWidget::isClosable == false)
+    //    dock->setFeatures(dock->features() ^ QDockWidget::DockWidgetClosable);
 
     button = window->Dock(dock);
     button->SetThisText(TRANSR(TypeWidget::title));
@@ -245,11 +247,11 @@ template<typename TypeWidget>
 void TDockWidget<TypeWidget>::SetIsClosable(bool value)
 {
     TypeWidget::SetIsClosable(value);
-    if(value && dock->features().testFlag(QDockWidget::DockWidgetClosable) == false)
+    /*if(value && dock->features().testFlag(QDockWidget::DockWidgetClosable) == false)
         dock->setFeatures(dock->features() | QDockWidget::DockWidgetClosable);
     else
         if(value == false && dock->features().testFlag(QDockWidget::DockWidgetClosable))
-        dock->setFeatures(dock->features() ^ QDockWidget::DockWidgetClosable);
+        dock->setFeatures(dock->features() ^ QDockWidget::DockWidgetClosable);*/
 }
 
 template<typename TypeWidget>

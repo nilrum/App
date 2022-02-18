@@ -146,9 +146,9 @@ void TEditorWidgetQt::SetIsButtons(bool value)
     if(isButtons && box == nullptr)
     {
         box = new QDialogButtonBox(this);
-        connect(box->addButton(TRANSR("Apply"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnApply, this));
-        connect(box->addButton(TRANSR("OK"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnOk, this));
-        connect(box->addButton(TRANSR("Cancel"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnCancel, this));
+        connect(box->addButton(TRANSR("Apply"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnApply));
+        connect(box->addButton(TRANSR("OK"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnOk));
+        connect(box->addButton(TRANSR("Cancel"), QDialogButtonBox::ActionRole), &QPushButton::clicked, PROXY_C(OnCancel));
         layout()->setContentsMargins(0, 0, 2, 5);
         layout()->addWidget(box);
     }
@@ -632,7 +632,19 @@ TEnumComboBox::TEnumComboBox(QWidget *parent, bool isDef ) : QComboBox(parent)
 
 void TEnumComboBox::setValue(QVariant value)
 {
-    enumValue = qvariant_cast<TEnum>(value);
+    SetEnum(qvariant_cast<TEnum>(value));
+}
+
+QVariant TEnumComboBox::value() const
+{
+    TEnum res = enumValue;
+    return QVariant::fromValue(res.SetIndex(currentData().toInt()));
+    //return currentData();
+}
+
+void TEnumComboBox::SetEnum(const TEnum &value)
+{
+    enumValue = value;
     clear();
     //заполняем возможные варианты перечисления
     const TEnumInfo& info = TEnumInfo::EnumInfo(enumValue.Info());
@@ -649,12 +661,31 @@ void TEnumComboBox::setValue(QVariant value)
     if(count()) setCurrentIndex(enumValue.Index() - begin);
 }
 
-QVariant TEnumComboBox::value() const
+void TEnumComboBox::SetEnumIndex(int index)
 {
-    TEnum res = enumValue;
-    return QVariant::fromValue(res.SetIndex(currentData().toInt()));
-    //return currentData();
+    if(index >= 0 && index < count())
+        setCurrentIndex(index - begin);
 }
+
+void TEnumComboBox::SetEnumValue(double value)
+{
+    SetEnumIndex(enumValue.EnumInfo().IndexFromValue(value));
+}
+
+int TEnumComboBox::EnumIndex() const
+{
+    if(count())
+        return currentIndex() + begin;
+    return -1;
+}
+
+double TEnumComboBox::EnumValue() const
+{
+    if(count())
+        return enumValue.EnumInfo().Value(currentIndex() + begin);
+    return 0;
+}
+
 //-----------------------TBoolCheckBox----------------------------------------------------------------------------------
 TBoolCheckBox::TBoolCheckBox(QWidget *parent) : QCheckBox(parent)
 {

@@ -31,16 +31,16 @@ public:
 
     inline bool IsValid() const                         { return text.empty() == false;}
 
-    TFunItemCall Call()                                 { return checkable ? call : [this](){ SetIsChecked(!checked); call(); }; } //функция вызова пункта меню
+    TFunItemCall Call();                                //функция вызова пункта меню
     inline TMenuItem& SetCall(const TFunItemCall& value){ call = value; return *this; }
 
     inline size_t Priority() const                      { return priority; }
 
     inline int IndexImg() const                         { return indexImg; }
-    inline TMenuItem& SetIndexImg(int index)               { indexImg = index; return *this; }
+    inline TMenuItem& SetIndexImg(int index)            { indexImg = index; return *this; }
 
     inline bool IsToolBar() const                       { return isToolBar; }
-    inline TMenuItem& SetIsToolBar(bool value)             { isToolBar = value; return *this; }
+    inline TMenuItem& SetIsToolBar(bool value)          { isToolBar = value; return *this; }
 
     inline bool IsVisible() const                       { return visible; }
     inline TMenuItem& SetIsVisible(bool value)          { visible = value; return *this; }
@@ -55,9 +55,9 @@ public:
     inline bool IsCheckable() const                     { return checkable; }
     inline TMenuItem& SetIsCheckable(bool value)        { checkable = value; return *this; }
 
-    bool IsEnabled() const;                           //Доступен ли пункт меню для редактирования
-    void SetIsEnabled(bool value);                       //Установить доступность пункта меню для редактирования
-    sigslot::signal<bool> OnEnabled;                //Событие поменялась доступность пункта меню
+    bool IsEnabled() const;                             //Доступен ли пункт меню для редактирования
+    void SetIsEnabled(bool value);                      //Установить доступность пункта меню для редактирования
+    sigslot::signal<bool> OnEnabled;                    //Событие поменялась доступность пункта меню
 
     TFunCheckEnable CheckEnable() const;                //получение и установка функции проверки на доступность пункта меню
     void SetCheckEnable(const TFunCheckEnable& value);

@@ -117,6 +117,16 @@ void TMenuItem::RunCheckEnable()
         SetIsEnabled(checkEnable());
 }
 
+TFunItemCall TMenuItem::Call()
+{
+    return checkable ?
+    call :
+    [this]()
+    {
+        SetIsChecked(!checked);
+        call();
+    };
+}
 
 
 //-------------------------------TMenuTree------------------------------------------------------------------------------
